@@ -5,29 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <title>Budget Management</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </head>
 <body style="background-color: #f2f3f3;">
 
     <!-- small screen -->
     <nav class="navbar navbar-expand-md navbar-light bg-light d-md-none">
-        <a class="navbar-brand" href="#">Brand</a>
+        <a class="navbar-brand" href="/">Brand</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="color: #007BFE;"><i class="bi-house"></i> Home</a>
+                    <a class="nav-link" href="/" style="color: #084965;"><i class="bi-house"></i> Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/charts/" style="color: #007BFE;"><i class="bi bi-bar-chart-line"></i> Charts</a>
+                    <a class="nav-link" href="/charts/" style="color: #084965;"><i class="bi bi-bar-chart-line"></i> Charts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/category/" style="color: #007BFE;"><i class="bi-table"></i> Category</a>
+                    <a class="nav-link" href="/category/" style="color: #084965;"><i class="bi-table"></i> Category</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="color: #007BFE;"><i class="bi-heart"></i> Products</a>
+                    <a class="nav-link" href="#" style="color: #084965;"><i class="bi-heart"></i> Products</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
@@ -56,22 +57,22 @@
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item" style="margin-top: 10vh;">
-                            <a class="nav-link" href="/">
+                            <a class="nav-link" href="/" style="color: #084965;">
                                 <i class="bi-house"></i> Home
                             </a><br>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="/charts/">
+                            <a class="nav-link active" href="/charts/" style="color: #084965;">
                                 <i class="bi bi-bar-chart-line"></i> Charts
                             </a><br>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/category/">
+                            <a class="nav-link" href="/category/" style="color: #084965;">
                                 <i class="bi-table"></i> Category
                             </a><br>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="#" style="color: #084965;">
                                 <i class="bi-heart"></i> Products
                             </a><br>
                         </li>
@@ -97,8 +98,8 @@
 
             <!-- Main page -->
             <main role="main" class="col-md-10 ml-sm-auto px-4">
-                <div class="container d-flex flex-column justify-content-center align-items-center" style="height: 80vh; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); background-color: white; border-radius: 20px; margin-top: 10vh; margin-bottom: 10vh;">
-                    <div>
+                    <div class="container d-flex flex-column justify-content-center align-items-center" style="min-height: 100vh; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); background-color: white; border-radius: 20px; padding: 20px;">
+                        <div class="inner-content" style="padding: 10px; width: 95%;">
                         {% block content %}
                         {% endblock %}
                     </div>
@@ -106,9 +107,5 @@
             </main>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGaCGqZgDvTZC+RGNHP8eEazW0" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384 -JjSmVgyd0p3pXB1rRibZUAYoIIy64AxS7Fw1wq4l0xYgQQonR+" crossorigin="anonymous"></script>
 
 </body>

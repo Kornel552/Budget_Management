@@ -1,49 +1,89 @@
 {% extends "base.html" %}
 {% block content %}
-
 {% if user.is_authenticated %}
 
-
+<div class="modal fade" id="planModal" tabindex="-1" role="dialog" aria-labelledby="planModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="planModalLabel">New plan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="plan_id" id="modal-plan-id">
+                    <div class="form-group">
+                        <label class="col-form-label">Name:</label>
+                        <input type="text" name="plan_name" class="form-control" id="modal-plan-name">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-success" type="submit" name="add_plan">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <br><br><a style="color: green;">user logged in</a><p>
     <h4>Select your plans:</h4><br>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#planModal" data-id="{{ plan.id }}" data-name="{{ plan.plan_name }}" style="background-color: #084965; border-color: #084965;">
+        <i class="bi bi-plus"></i> New plan
+    </button>
+    <br><br>
 
     <div class="row justify-content-center row-centered">
+        {% for plan in plans %}
         <div class="card" style="width: 16rem; height: 9rem; margin: 15px; text-align: left; color: black; box-shadow: 0 5px 5px rgba(0,0,0,0.1);">
-            <a href="#" style="color: black; text-decoration: none; margin-left: 10px;">
-                <p>Budget plan 1</p><br><br><br>
-                <p style="font-size: 12px;">Creation date: 06-11-2024</p>
+            <a href="{% url 'charts' plan.id %}" style="color: black; text-decoration: none; margin-left: 10px; margin-top: 10px;">
+                <p>{{ plan.plan_name }}</p>
+                <br style="margin-top: 3px;">
+                <hr style="margin-left: -10px; height: 5px; border:none; color: #084965; background-color: #084965;">
             </a>
+            <div class="d-flex">
+                <p style="font-size: 12px; margin-left: 10px;">created on: {{ plan.created_date|date:'d-m-Y' }}</p>
+                <div class="ml-auto" style="margin-right: 10px; margin-top: -5px; font-size: 20px;">
+                    <button class="three-dots-btn"
+                        data-id="{{ plan.id }}"
+                        data-toggle="popover"
+                        data-placement="bottom"
+                        data-html="true"
+                        data-content="
+                        <a href='#' class='dropdown-item bi bi-pencil' style='color: #084965;'> Edit</a>
+                        <a href='#' class='dropdown-item bi bi-trash' style='color: red;'> Delete</a>"
+                        style="background: none; border: none; cursor: pointer;">
+                        <i class="bi bi-three-dots" style="color: #084965;"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="card" style="width: 16rem; height: 9rem; margin: 15px; text-align: left; color: black; box-shadow: 0 5px 5px rgba(0,0,0,0.1);">
-            <a href="#" style="color: black; text-decoration: none; margin-left: 10px;">
-                <p>Budget plan 2</p><br><br><br>
-                <p style="font-size: 12px;">Creation date: 06-11-2024</p>
-            </a>
-        </div>
-        <div class="card" style="width: 16rem; height: 9rem; margin: 15px; text-align: left; color: black; box-shadow: 0 5px 5px rgba(0,0,0,0.1);">
-            <a href="#" style="color: black; text-decoration: none; margin-left: 10px; ">
-                <p>Budget plan 3</p><br><br><br>
-                <p style="font-size: 12px;">Creation date: 06-11-2024</p>
-            </a>
-        </div>
-        <div class="card" style="width: 16rem; height: 9rem; margin: 15px; text-align: left; color: black; box-shadow: 0 5px 5px rgba(0,0,0,0.1);">
-            <a href="#" style="color: black; text-decoration: none; margin-left: 10px; ">
-                <p>Budget plan 3</p><br><br>
-                <p style="font-size: 12px;">Creation date: 06-11-2024</p>
-            </a>
-        </div>
-        <div class="card" style="width: 16rem; height: 9rem; margin: 15px; text-align: left; color: black; box-shadow: 0 5px 5px rgba(0,0,0,0.1);">
-            <a href="#" style="color: black; text-decoration: none; margin-left: 10px; ">
-                <p>Budget plan 3</p><br><br><br>
-                <p style="font-size: 12px;">Creation date: 06-11-2024</p>
-            </a>
-        </div>
-
+        {% endfor %}
     </div>
 </div>
-dodać pasek przesuwania jeżeli jest więcej kafelków niż 2 rzędy
+
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="popover"]').popover({
+            trigger: 'focus'
+        });
+    });
+
+    $('#planModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var planId = button.data('id');
+        var planName = button.data('name');
+
+        var modal = $(this);
+        modal.find('#modal-plan-id').val(planId);
+        modal.find('#modal-plan-name').val(planName);
+    });
+</script>
 {% endif %}
 
 {% endblock %}

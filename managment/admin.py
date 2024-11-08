@@ -3,14 +3,14 @@ from . import models
 
 
 class PlanAdmin(admin.ModelAdmin):
-    list_display = ['plan_name']
+    list_display = ['plan_name', 'created_date']
 
 
 admin.site.register(models.Plan, PlanAdmin)
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ['person_name']
+    list_display = ['user', 'person_name']
 
 
 admin.site.register(models.Person, PersonAdmin)

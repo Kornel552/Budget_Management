@@ -1,10 +1,152 @@
 {% extends "base.html" %}
-
-{% block title %}Strona główna{% endblock %}
-
-
 {% block content %}
 
-category
+<div class="modal fade" id="personModal" tabindex="-1" role="dialog" aria-labelledby="personModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="personModalLabel">Edit name</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="person_id" id="modal-person-id">
+                    <div class="form-group">
+                        <label class="col-form-label">Name:</label>
+                        <input type="text" name="person_name" class="form-control" id="modal-person-name">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-success" type="submit" name="edit_person">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoryModalLabel">Edit name</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="category_id" id="modal-category-id">
+                    <div class="form-group">
+                        <label class="col-form-label">Name:</label>
+                        <input type="text" name="category_name" class="form-control" id="modal-category-name">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-success" type="submit" name="edit_category">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-6">
+        <div class="input-group">
+            <form method="post">
+                Add person
+                <div class="input-group-append">
+                    {% csrf_token %}
+                    {{ person_form.person_name }}
+                    <button class="btn btn-secondary" type="submit" name="add_person" style="background-color: #084965; border-color: #084965;">Add</button>
+                </div>
+            </form>
+        </div>
+
+        <br><br><br>
+        <table class="table">
+          <tbody>
+          {% for person in persons %}
+            <tr>
+              <td>.</td>
+              <td>{{ person.person_name }}</td>
+              <td>
+                  <button type="button" class="btn btn-primary-outline" data-toggle="modal" data-target="#personModal" data-id="{{ person.id }}" data-name="{{ person.person_name }}"><i class="bi bi-pencil" style="color: #084965;"></i></button>
+              </td>
+              <td>
+                  <form method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="person_id" value="{{ person.id }}">
+                      <button type="submit" name="person_delete" class="btn btn-danger-outline"><i class="bi bi-trash" style="color: red;"></i></button>
+                  </form>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+    </div>
+    <div class="col-md-6">
+        <div class="input-group">
+            <form method="post">
+                Add category
+                <div class="input-group-append">
+                    {% csrf_token %}
+                    {{ category_form.category_name }}
+                    <button class="btn btn-secondary" type="submit" name="add_category" style="background-color: #084965; border-color: #084965;">Add</button>
+                </div>
+            </form>
+        </div>
+
+        <br><br><br>
+        <table class="table">
+          <tbody>
+          {% for category in categories %}
+            <tr>
+              <td>{{ category }}</td>
+              <td>
+                <button type="button" class="btn btn-primary-outline" data-toggle="modal" data-target="#categoryModal" data-id="{{ category.id }}" data-name="{{ category.category_name }}"><i class="bi bi-pencil" style="color: #084965;"></i></button>
+              </td>
+              <td>
+                  <form method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="category_id" value="{{ category.id }}">
+                      <button type="submit" name="category_delete" class="btn btn-danger-outline"><i class="bi bi-trash" style="color: red;"></i></button>
+                  </form>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+    </div>
+
+</div>
+<br><br><br>
+
+<script>
+    $('#personModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var personId = button.data('id');
+        var personName = button.data('name');
+
+        var modal = $(this);
+        modal.find('#modal-person-id').val(personId);
+        modal.find('#modal-person-name').val(personName);
+    });
+    $('#categoryModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var categoryId = button.data('id');
+        var categoryName = button.data('name');
+
+        var modal = $(this);
+        modal.find('#modal-category-id').val(categoryId);
+        modal.find('#modal-category-name').val(categoryName);
+    });
+</script>
 
 {% endblock %}
