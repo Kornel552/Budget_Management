@@ -28,3 +28,12 @@ class CategoryForm(forms.ModelForm):
             'category_name': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
+
+class ElementForm(forms.ModelForm):
+    class Meta:
+        model = models.Element
+        fields = ['person', 'category', 'element_name', 'cost', 'date_added']
+        widgets = {
+            'element_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'date_added': forms.DateInput(attrs={'type': 'date'})
+        }

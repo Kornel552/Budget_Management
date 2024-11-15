@@ -3,7 +3,7 @@ from . import models
 
 
 class PlanAdmin(admin.ModelAdmin):
-    list_display = ['plan_name', 'created_date']
+    list_display = ['user', 'plan_name', 'created_date']
 
 
 admin.site.register(models.Plan, PlanAdmin)
@@ -17,14 +17,14 @@ admin.site.register(models.Person, PersonAdmin)
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['category_name']
+    list_display = ['user', 'category_name']
 
 
 admin.site.register(models.Category, CategoryAdmin)
 
 
 class ElementAdmin(admin.ModelAdmin):
-    list_display = ['plan', 'person', 'category', 'element_name', 'cost']
+    list_display = ['user', 'plan', 'person', 'category', 'element_name', 'cost', 'date_added']
 
 
 admin.site.register(models.Element, ElementAdmin)

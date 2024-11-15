@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="modal fade" id="add_elementModal" tabindex="-1" role="dialog" aria-labelledby="add_elementModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add_elementModalLabel">Add Element</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% if plan_id %}
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="element_id" id="add_modal-element-id">
+                    <div class="form-group">
+                        <label class="col-form-label">Person:</label>
+                        <select name="person" class="form-control" id="add_modal-person">
+                            {% for person in persons %}
+                                <option value="{{ person.id }}">{{ person.person_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Category:</label>
+                        <select name="category" class="form-control" id="add_modal-category">
+                            {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.category_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Element Name:</label>
+                        <input type="text" name="element_name" class="form-control" id="add_modal-element-name">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Cost:</label>
+                        <input type="number" name="cost" class="form-control" id="add_modal-cost" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Date Added:</label>
+                        <input type="date" name="date_added" class="form-control" id="add_modal-date-added">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-success" type="submit" name="add_element">Save changes</button>
+                    </div>
+                </form>
+                {% endif %}
+                {% if not plan_id %}
+                    You must select a plan!
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="elementModal" tabindex="-1" role="dialog" aria-labelledby="elementModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="elementModalLabel">Edit Element</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="element_id" id="modal-element-id">
+                    <div class="form-group">
+                        <label class="col-form-label">Person:</label>
+                        <select name="person" class="form-control" id="modal-person">
+                            {% for person in persons %}
+                                <option value="{{ person.id }}">{{ person.person_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Category:</label>
+                        <select name="category" class="form-control" id="modal-category">
+                            {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.category_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Element Name:</label>
+                        <input type="text" name="element_name" class="form-control" id="modal-element-name">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Cost:</label>
+                        <input type="number" name="cost" class="form-control" id="modal-cost" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Date Added:</label>
+                        <input type="date" name="date_added" class="form-control" id="modal-date-added">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-success" type="submit" name="edit_element">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="element_id" value="{{ element.id }}">
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#add_elementModal"
+        data-id="{{ element.id }}"
+        data-name="{{ element.element_name }}"
+        data-person-id="{{ element.person.id }}"
+        data-category-id="{{ element.category.id }}"
+        data-cost="{{ element.cost }}"
+        data-date-added="{{ element.date_added|date:'Y-m-d' }}" style="background-color: #084965; border-color: #084965;">
+        <i class="bi bi-plus"></i> Add element
+    </button>
+</form>
+<br><br>
+
+<h2>Select Plan</h2>
+<form method="get">
+    <div class="form-group">
+        <select name="plan_id" class="form-control" onchange="this.form.submit()">
+            <option value="">Select a plan</option>
+            {% for plan in plans %}
+            <option value="{{ plan.id }}" {% if plan.id == selected_plan_id %}selected{% endif %}>
+                {{ plan.plan_name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+</form>
+
+{% if category_names %}
+<div class="table-container {% if should_scroll_large %}scroll-large{% endif %} {% if should_scroll_small %}scroll-small{% endif %}">
+    <table class="table table-bordered">
+        <thead style="background-color: #084965; color: white;">
+            <tr>
+                {% for category in category_names %}
+                <th>{{ category }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in table_rows %}
+            <tr>
+                {% for element in row %}
+                <td>
+                    {% if element %}
+                        <strong>{{ element.element_name }}</strong><br>
+                        Person: {{ element.person.person_name }}<br>
+                        Cost: {{ element.cost }}<br>
+                        Date: {{ element.date_added|date:'Y-m-d' }}
+                        <div class="d-flex justify-content-start">
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="element_id" value="{{ element.id }}">
+                                <button type="button" class="btn btn-primary-outline" data-toggle="modal" data-target="#elementModal"
+                                    data-id="{{ element.id }}"
+                                    data-name="{{ element.element_name }}"
+                                    data-person-id="{{ element.person.id }}"
+                                    data-category-id="{{ element.category.id }}"
+                                    data-cost="{{ element.cost }}"
+                                    data-date-added="{{ element.date_added|date:'Y-m-d' }}">
+                                    <i class="bi bi-pencil" style="color: #084965;"></i>
+                                </button>
+                            </form>
+                            <form method="post">
+                              {% csrf_token %}
+                              <input type="hidden" name="id_element" value="{{ element.id }}">
+                              <button type="submit" name="delete_element" class="btn btn-danger-outline"><i class="bi bi-trash" style="color: red;"></i></button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    {% if selected_plan_id %}
+    <p>No elements found for the selected plan.</p>
+    {% endif %}
+{% endif %}
+
+<style>
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+}
+
+@media (min-width: 992px) {
+    /* Large screens */
+    .scroll-large .table {
+        min-width: calc(150px * {{ num_categories }});
+    }
+}
+
+@media (max-width: 991.98px) {
+    /* Small screens */
+    .scroll-small .table {
+        min-width: calc(150px * {{ num_categories }});
+    }
+}
+</style>
+<script>
+    $('#elementModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var elementId = button.data('id');
+        var elementName = button.data('name');
+        var personId = button.data('person-id');
+        var categoryId = button.data('category-id');
+        var cost = button.data('cost');
+        var dateAdded = button.data('date-added');
+
+        var modal = $(this);
+        modal.find('#modal-element-id').val(elementId);
+        modal.find('#modal-element-name').val(elementName);
+        modal.find('#modal-person').val(personId);
+        modal.find('#modal-category').val(categoryId);
+        modal.find('#modal-cost').val(cost);
+        modal.find('#modal-date-added').val(dateAdded);
+    });
+
+    $('#add_elementModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var elementId = button.data('id');
+        var elementName = button.data('name');
+        var personId = button.data('person-id');
+        var categoryId = button.data('category-id');
+        var cost = button.data('cost');
+        var dateAdded = button.data('date-added');
+
+        var modal = $(this);
+        modal.find('#add_modal-element-id').val(elementId);
+        modal.find('#add_modal-element-name').val(elementName);
+        modal.find('#add_modal-person').val(personId);
+        modal.find('#add_modal-category').val(categoryId);
+        modal.find('#add_modal-cost').val(cost);
+        modal.find('#add_modal-date-added').val(dateAdded);
+    });
+</script>
+{% endblock %}

@@ -34,6 +34,7 @@ class Element(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     element_name = models.CharField(max_length=150)
     cost = models.DecimalField(max_digits=6, decimal_places=2)
+    date_added = models.DateField()
 
     def __str__(self):
         return self.element_name

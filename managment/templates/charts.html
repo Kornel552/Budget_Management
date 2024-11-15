@@ -1,13 +1,132 @@
 {% extends "base.html" %}
 
-{% block title %}Strona główna{% endblock %}
-
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
 
 {% block content %}
+<h1>Budget chart</h1>
 
-charts<br>
-number: {{ charts_id }}
+<form method="get" class="form-inline mb-6">
+    <div class="form-group">
+        <label for="start_date">Start date:</label>
+        <input type="date" class="form-control ml-2" id="start_date" name="start_date" value="{{ start_date }}">&nbsp;
+    </div>
+    <div class="form-group ml-6">
+        <label for="end_date">End date:</label>
+        <input type="date" class="form-control ml-2" id="end_date" name="end_date" value="{{ end_date }}">&nbsp;
+    </div>
+    <div class="form-group ml-6">
+        <label for="person"> Person:</label>
+        <select class="form-control ml-2" id="person" name="person" multiple>
+            {% for person in all_persons %}
+                <option value="{{ person.id }}" {% if person.id|stringformat:"s" in selected_persons %}selected{% endif %}>{{ person.person_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary ml-3" style="background-color: #084965; border-color: #084965;">
+        <i class="bi bi-funnel-fill"></i> Filter</button>
+    <a type="submit" href="{% url 'charts' charts_id %}" class="btn btn-primary ml-3">Reset</a>
+</form>
+<br><br>
 
+<canvas id="myChart" width="800" height="400"></canvas>
 
+<br><br><br>
+<div class="table-container {% if should_scroll_large %}scroll-large{% endif %} {% if should_scroll_small %}scroll-small{% endif %}">
+    <table class="table table-bordered">
+        <thead style="background-color: #084965; color: white;">
+            <tr>
+                <th>Person</th>
+                <th>Element</th>
+                <th>Expenses</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for element in elements %}
+            <tr>
+                <td>{{ element.person }}</td>
+                <td>{{ element.element_name }}</td>
+                <td>{{ element.cost }}</td>
+            </tr>
+        {% endfor %}
+        <thead class="thead-light">
+            <tr>
+                <th colspan="2"></th>
+                <th>Sum: {{ sum_list }}</th>
+            </tr>
+        </thead>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var categories = {{ categories|safe }};
+    var persons = {{ persons|safe }};
+    var data = {{ data|safe }};
+
+    var datasets = [];
+    var backgroundColors = [
+        'rgba(255, 99, 132, 0.2)', // czerwony
+        'rgba(54, 162, 235, 0.2)', // niebieski
+        'rgba(255, 206, 86, 0.2)', // żółty
+        'rgba(75, 192, 192, 0.2)', // zielony
+        'rgba(153, 102, 255, 0.2)', // fioletowy
+        'rgba(255, 159, 64, 0.2)', // pomarańczowy
+    ];
+    var borderColors = [
+        'rgba(255,99,132,1)', // czerwony
+        'rgba(54,162,235,1)', // niebieski
+        'rgba(255,206,86,1)', // żółty
+        'rgba(75,192,192,1)', // zielony
+        'rgba(153,102,255,1)', // fioletowy
+        'rgba(255,159,64,1)', // pomarańczowy
+    ];
+
+    // Sprawdź, czy są jakieś dane do wyświetlenia
+    if (categories.length > 0 && persons.length > 0) {
+        for (var i = 0; i < persons.length; i++) {
+            var person = persons[i];
+            var personData = [];
+            for (var j = 0; j < categories.length; j++) {
+                var category = categories[j];
+                var value = data[category][person] || 0;
+                personData.push(value);
+            }
+            datasets.push({
+                label: person,
+                data: personData,
+                backgroundColor: backgroundColors[i % backgroundColors.length],
+                borderColor: borderColors[i % borderColors.length],
+                borderWidth: 1
+            });
+        }
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: categories,
+                datasets: datasets
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        stacked: true,
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }],
+                    xAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        });
+    } else {
+        document.getElementById('myChart').style.display = 'none';
+        document.write('<p>Brak danych do wyświetlenia.</p>');
+    }
+</script>
 
 {% endblock %}
