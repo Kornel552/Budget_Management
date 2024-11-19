@@ -1,6 +1,4 @@
 # Budget_Management
-
-# Project Name
 > Application to control your expenses
 
 ## Table of Contents
