@@ -140,8 +140,21 @@
     </div>
 </form>
 
+{% if plan_id %}
+    <form method="get" class="form-inline mb-3">
+        <div class="form-group">
+            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ search_query }}">
+        </div>
+        {% if plan_id %}
+        <input type="hidden" name="plan_id" value="{{ plan_id }}">
+        {% endif %}
+        <button type="submit" class="btn btn-secondary ml-2" style="background-color: #084965; border-color: #084965;"><i class="bi bi-search"></i> Search</button>
+        <a type="submit" href="{% url 'elements' %}?plan_id={{plan_id}}" class="btn btn-primary ml-3"><i class="bi bi-bookmark-x-fill"></i> Reset</a>
+    </form>
+{% endif %}
+
 {% if category_names %}
-<div class="table-container {% if should_scroll_large %}scroll-large{% endif %} {% if should_scroll_small %}scroll-small{% endif %}">
+<div class="table table-responsive">
     <table class="table table-bordered">
         <thead style="background-color: #084965; color: white;">
             <tr>
@@ -194,29 +207,6 @@
     {% endif %}
 {% endif %}
 
-<style>
-.table-container {
-    overflow-x: auto;
-}
-
-.table {
-    width: 100%;
-}
-
-@media (min-width: 992px) {
-    /* Large screens */
-    .scroll-large .table {
-        min-width: calc(150px * {{ num_categories }});
-    }
-}
-
-@media (max-width: 991.98px) {
-    /* Small screens */
-    .scroll-small .table {
-        min-width: calc(150px * {{ num_categories }});
-    }
-}
-</style>
 <script>
     $('#elementModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);

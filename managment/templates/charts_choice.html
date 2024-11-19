@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h4>select plan:</h4><br>
+    <form method="post" action="{% url 'charts_choice' %}">
+        {% csrf_token %}
+        <select name="plan_id" class="form-control">
+            <option value="">Select a plan</option>
+            {% for post in posts %}
+            <option value="{{ post.id }}">{{ post.plan_name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit" class="btn btn-secondary" style="background-color: #084965; border-color: #084965;">Go to</button>
+    </form>
+</div>
+{% endblock %}

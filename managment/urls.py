@@ -1,13 +1,14 @@
 from django.urls import path
-from . import views
+from .views import auth_views, category_views, charts_views, elements_views, home_views
 
 urlpatterns = [
-    path('login/', views.login_page, name='login_page'),
-    path('register/', views.register_page, name='register_page'),
-    path('logout/', views.logout_page, name='logout_page'),
+    path('login/', auth_views.login_page, name='login_page'),
+    path('register/', auth_views.register_page, name='register_page'),
+    path('logout/', auth_views.logout_page, name='logout_page'),
 
-    path('', views.home, name='home'),
-    path('charts/<int:item_id>', views.charts, name='charts'),
-    path('elements/', views.elements, name='elements'),
-    path('category/', views.category, name='category')
+    path('', home_views.home, name='home'),
+    path('charts_choice/', charts_views.charts_choice, name='charts_choice'),
+    path('charts/<int:item_id>', charts_views.charts, name='charts'),
+    path('elements/', elements_views.elements, name='elements'),
+    path('category/', category_views.category, name='category')
 ]
