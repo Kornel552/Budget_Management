@@ -35,4 +35,8 @@
    ```sh
    py manage.py migrate
    ```
+6. Run application:
+   ```
+   py manage.py runserver
+   ```
 
