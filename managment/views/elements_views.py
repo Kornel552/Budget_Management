@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from managment.forms import ElementForm
 from managment.models import Plan, Person, Category, Element
 from django.db.models import Q
+from django.contrib import messages
 
 
 @login_required
@@ -21,7 +22,8 @@ def elements(request):
         elif 'delete_element' in request.POST:
             delete_element(request.POST.get('id_element'))
         elif 'add_element' in request.POST:
-            add_element(request.POST, plan_id, request.user)
+            add_element(request, request.POST, plan_id, request.user)
+
 
     if plan_id:
         categories = Category.objects.filter(user=request.user)
@@ -101,10 +103,14 @@ def delete_element(id_element):
         Element.objects.get(id=id_element).delete()
 
 
-def add_element(data, plan_id, user):
+def add_element(request, data, plan_id, user):
     form = ElementForm(data)
     if form.is_valid():
         new_element = form.save(commit=False)
         new_element.user = user
         new_element.plan_id = plan_id
         new_element.save()
+        messages.success(request, 'Element added successfully!')
+    else:
+        messages.error(request, 'Error adding element. Please correct the errors and try again.')
+
